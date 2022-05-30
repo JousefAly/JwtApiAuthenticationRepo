@@ -1,5 +1,6 @@
 using JwtApiAuthentication.Helpers;
 using JwtApiAuthentication.Models;
+using JwtApiAuthentication.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -36,6 +37,9 @@ namespace JwtApiAuthentication
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
+
+            services.AddScoped<IAuthService, AuthService>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

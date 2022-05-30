@@ -4,6 +4,8 @@
 1. Add file appsettings.json to the project directory 
 2. paste this snippet below in the file
 3. the JWT Keys are example we can put them in other place for more security
+
+```
 {
   "Logging": {
     "LogLevel": {
@@ -21,6 +23,6 @@
   }
 }
 
-
-
 ```
+
+

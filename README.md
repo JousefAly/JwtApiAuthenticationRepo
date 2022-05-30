@@ -7,6 +7,9 @@
 
 ```
 {
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=JwtApiAppData;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Information",
@@ -22,6 +25,7 @@
     "DurationInDays": 30
   }
 }
+
 
 ```
 

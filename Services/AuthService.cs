@@ -28,6 +28,19 @@ namespace JwtApiAuthentication.Services
             _mapper = mapper;
             _jwt = jwt.Value;
         }
+
+        public async Task<AuthModel> GetTokenAsync(TokenRequestModel model)
+        {
+            var authModel = new AuthModel();
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if(user is null)
+            {
+                authModel.Message = "Email or password is incorrect!";
+            }
+            
+            return authModel;
+        }
+
         public async Task<AuthModel> RegisterAsync(RegisterModel model)
         {
             if (await _userManager.FindByEmailAsync(model.Email) != null)

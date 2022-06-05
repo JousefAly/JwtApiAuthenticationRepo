@@ -28,7 +28,7 @@ namespace JwtApiAuthentication.Controllers
             {
                 return BadRequest(result.Message);
             }
-            return Ok(result);
+            return Ok(new { result.Token, result.ExpiresOn});
 
         }
 

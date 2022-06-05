@@ -31,5 +31,6 @@ namespace JwtApiAuthentication.Controllers
             return Ok(result);
 
         }
+
     }
 }

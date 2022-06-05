@@ -46,25 +46,34 @@ namespace JwtApiAuthentication.Services
                 return new AuthModel { Message = errors };
             }
             await _userManager.AddToRoleAsync(user, "User");
+            var jwtSecurityToken = await CreateJwtToken(user);
+            return new AuthModel
+            {
 
+                UserName = user.UserName,
+                Email = user.Email,
+                IsAuthenticated = true,
+                Roles = new List<string> { "User" },
+                ExpiresOn = jwtSecurityToken.ValidTo,
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken)
+            };
 
-           
         }
-            //generate the token
+        //generate the token
         private async Task<JwtSecurityToken> CreateJwtToken(AppUser user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
-            var roles = await _userManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
             var roleClaims = new List<Claim>();
-
-            foreach (var role in roles)
+            foreach (var role in userRoles)
+            {
                 roleClaims.Add(new Claim("roles", role));
-
+            }
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("uid", user.Id)
             }
             .Union(userClaims)
@@ -73,14 +82,15 @@ namespace JwtApiAuthentication.Services
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
-            var jwtSecurityToken = new JwtSecurityToken(
+            var jwtToken = new JwtSecurityToken(
                 issuer: _jwt.Issuer,
                 audience: _jwt.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddDays(Convert.ToDouble(_jwt.DurationInDays)),
+                expires: DateTime.Now.AddDays(_jwt.DurationInDays),
                 signingCredentials: signingCredentials);
+            return jwtToken;
 
-            return jwtSecurityToken;
         }
+
     }
 }

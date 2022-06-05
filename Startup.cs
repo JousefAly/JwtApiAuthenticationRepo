@@ -34,6 +34,7 @@ namespace JwtApiAuthentication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //can retrive JWT object using IOptions<JWT> like dependecy injection
             services.Configure<JWT>(Configuration.GetSection("JWT"));
 
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();

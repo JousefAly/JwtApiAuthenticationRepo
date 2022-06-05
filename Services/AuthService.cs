@@ -28,7 +28,7 @@ namespace JwtApiAuthentication.Services
             _mapper = mapper;
             _jwt = jwt.Value;
         }
-        public async Task<AuthModel> Register(RegisterModel model)
+        public async Task<AuthModel> RegisterAsync(RegisterModel model)
         {
             if (await _userManager.FindByEmailAsync(model.Email) != null)
                 return new AuthModel { Message = "Email is already registered!" };

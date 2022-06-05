@@ -1,3 +1,4 @@
+using AutoMapper;
 using JwtApiAuthentication.Helpers;
 using JwtApiAuthentication.Models;
 using JwtApiAuthentication.Services;
@@ -17,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,12 +39,12 @@ namespace JwtApiAuthentication
             //can retrive JWT object using IOptions<JWT> like dependecy injection
             services.Configure<JWT>(Configuration.GetSection("JWT"));
 
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
-            services.AddScoped<IAuthService, AuthService>();
 
             services.AddAuthentication(options =>
             {
@@ -64,6 +66,8 @@ namespace JwtApiAuthentication
 
                 };
             });
+
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -17,7 +17,7 @@ namespace JwtApiAuthentication.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody]RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -28,8 +28,19 @@ namespace JwtApiAuthentication.Controllers
             {
                 return BadRequest(result.Message);
             }
-            return Ok(new { result.Token, result.ExpiresOn});
+            return Ok(new { result.Token, result.ExpiresOn });
 
+        }
+        [HttpPost("token")]
+        public async Task<IActionResult> GetToken([FromBody] TokenRequestModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _authService.GetTokenAsync(model);
+            if (!result.IsAuthenticated)
+                return BadRequest(result.Message);
+            return Ok(result);
         }
 
     }

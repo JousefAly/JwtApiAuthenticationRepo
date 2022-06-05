@@ -33,11 +33,21 @@ namespace JwtApiAuthentication.Services
         {
             var authModel = new AuthModel();
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if(user is null)
+            if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 authModel.Message = "Email or password is incorrect!";
+                return authModel;
             }
-            
+            var jwtSecurityToken = await CreateJwtToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            authModel.Email = user.Email;
+            authModel.ExpiresOn = jwtSecurityToken.ValidTo;
+            authModel.UserName = user.UserName;
+            authModel.IsAuthenticated = true;
+            authModel.Roles = roles.ToList();
+
             return authModel;
         }
 

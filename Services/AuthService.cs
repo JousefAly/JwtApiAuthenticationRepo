@@ -32,7 +32,7 @@ namespace JwtApiAuthentication.Services
         {
             if (await _userManager.FindByEmailAsync(model.Email) != null)
                 return new AuthModel { Message = "Email is already registered!" };
-            if (_userManager.FindByNameAsync(model.UserName) != null)
+            if (await _userManager.FindByNameAsync(model.UserName) != null)
                 return new AuthModel { Message = "Username is already registered!" };
             var user = _mapper.Map<AppUser>(model);
             var result = await _userManager.CreateAsync(user, model.Password);

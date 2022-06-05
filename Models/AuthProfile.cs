@@ -11,7 +11,7 @@ namespace JwtApiAuthentication.Models
     {
         public AuthProfile()
         {
-          
+            CreateMap<RegisterModel, AppUser>();
         }
     }
 }
